@@ -62,10 +62,9 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        let container = document.getElementById('todo-app');
+    function createTodoApp(container, title = 'TODO-LIST') {
         // her we assign functions into variables
-        let todoAppTitle = createAppTitle('TASK LIST');
+        let todoAppTitle = createAppTitle(title);
         let todoItemForm = createTodoItemForm();
         let todoList = createTodoList();
 
@@ -96,7 +95,14 @@
             // here we delite input value(new task that user has enter) after adding of new task
             todoItemForm.input.value = '';
         });
+    }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        createTodoApp(document.getElementById('my-todos'),'My todos');
+        createTodoApp(document.getElementById('mom-todos'),'Mom todos');
+        createTodoApp(document.getElementById('dad-todos'),'Dad todos');
     });
+
+
 
 })();
