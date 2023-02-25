@@ -28,14 +28,43 @@
         }
 
     }
+
     function createTodoList() {
         let list = document.createElement('ul');
         list.classList.add('list-group');
         return list;
     }
+
+    function createTodoItem(name) {
+        let item = document.createElement('li');
+
+        let buttonGroup = document.createElement('div');
+        let doneButton = document.createElement('button');
+        let deliteButton = document.createElement('button');
+
+        item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        item.textContent = name;
+
+        buttonGroup.classList.add('btn-group', 'btn-group-sm');
+        doneButton.classList.add('btn', 'btn-success');
+        doneButton.textContent = 'DONE';
+        deliteButton.classList.add('btn', 'btn-danger');
+        deliteButton.textContent = 'DELITE';
+
+        buttonGroup.append(doneButton);
+        buttonGroup.append(deliteButton);
+        item.append(buttonGroup);
+
+        return {
+            item,
+            doneButton,
+            deliteButton,
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         let container = document.getElementById('todo-app');
-
+        // her we assign functions into variables
         let todoAppTitle = createAppTitle('TASK LIST');
         let todoItemForm = createTodoItemForm();
         let todoList = createTodoList();
@@ -43,6 +72,31 @@
         container.append(todoAppTitle);
         container.append(todoItemForm.form);
         container.append(todoList);
+
+        todoItemForm.form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            // check if we have value of input field
+            if (!todoItemForm.input.value) {
+                return;
+            }
+
+            let todoItem = createTodoItem(todoItemForm.input.value);
+            todoList.append(todoItem.item);
+
+            todoItem.doneButton.addEventListener('click', function () {
+                todoItem.item.classList.toggle('list-group-item-success');
+            });
+
+            todoItem.deliteButton.addEventListener('click', function () {
+                if (confirm('are you sure?')) {
+                    todoItem.item.remove();
+                }
+            });
+
+            // here we delite input value(new task that user has enter) after adding of new task
+            todoItemForm.input.value = '';
+        });
+
     });
 
 })();
