@@ -97,12 +97,6 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        createTodoApp(document.getElementById('my-todos'),'My todos');
-        createTodoApp(document.getElementById('mom-todos'),'Mom todos');
-        createTodoApp(document.getElementById('dad-todos'),'Dad todos');
-    });
-
-
+    window.createTodoApp = createTodoApp;
 
 })();
