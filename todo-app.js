@@ -71,6 +71,17 @@
         container.append(todoAppTitle);
         container.append(todoItemForm.form);
         container.append(todoList);
+        // set DISABLED to form btn when page has been loaded
+        todoItemForm.button.setAttribute('disabled', '');
+
+        // check if form input has text and save the btn DISABLED or diferent
+        todoItemForm.input.addEventListener('input', function () {
+            if (todoItemForm.input.value !== '') {
+                todoItemForm.button.removeAttribute('disabled');
+            } else {
+                todoItemForm.button.setAttribute('disabled', '');
+            }
+        });
 
         todoItemForm.form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -92,8 +103,11 @@
                 }
             });
 
-            // here we delite input value(new task that user has enter) after adding of new task
+            // here we delite input value(new task that user has enter) after adding new task
             todoItemForm.input.value = '';
+            // set DISABLED to form btn after adding new task 
+            todoItemForm.button.setAttribute('disabled', '');
+
         });
     }
 
