@@ -1,4 +1,6 @@
 (function () {
+    // array that include (NAME, ID, DONE-status like objects) of each task
+    const todoTasksArray = [];
     function createAppTitle(title) {
         let appTitle = document.createElement('h2');
         appTitle.innerHTML = title;
@@ -62,6 +64,14 @@
         }
     }
 
+    function checkStatus() {
+        let done = false;
+        if (todoItem.doneButton.classList.contains('list-group-item-success')) {
+            done = true;
+        } else { done = false };
+        return done;
+    }
+
     function createTodoApp(container, title = 'TODO-LIST') {
         // her we assign functions into variables
         let todoAppTitle = createAppTitle(title);
@@ -73,7 +83,6 @@
         container.append(todoList);
         // set DISABLED to form btn when page has been loaded
         todoItemForm.button.setAttribute('disabled', '');
-
         // check if form input has text and save the btn DISABLED or diferent
         todoItemForm.input.addEventListener('input', function () {
             if (todoItemForm.input.value !== '') {
@@ -103,11 +112,18 @@
                 }
             });
 
+            let todoId = Math.floor(Math.random() * 10) + 1;
+            todoItem.item.setAttribute('id', todoId);
+
             // here we delite input value(new task that user has enter) after adding new task
             todoItemForm.input.value = '';
             // set DISABLED to form btn after adding new task 
             todoItemForm.button.setAttribute('disabled', '');
-
+        });
+        todoTasksArray.push({
+            name: todoItem.input.value,
+            done: checkStatus(),
+            id: todoItem.item.getAttribute('id'),
         });
     }
 
