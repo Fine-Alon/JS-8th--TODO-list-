@@ -5,7 +5,7 @@
         let appTitle = document.createElement('h2');
         appTitle.innerHTML = title;
         return appTitle;
-    }
+    };
     function createTodoItemForm() {
         let form = document.createElement('form');
         let input = document.createElement('input');
@@ -29,15 +29,22 @@
             button,
         }
 
-    }
-
+    };
     function createTodoList() {
         let list = document.createElement('ul');
         list.classList.add('list-group');
         return list;
-    }
-
-    function createTodoItem(name) {
+    };
+    function gettNewId(arr) {
+        let maxId = 0;
+        for (let todoObj of arr) {
+            if (todoObj.id >= maxId) {
+                maxId = todoObj.id;
+            }
+        }
+        return maxId += 1;
+    };
+    function createTodoItem(obj) {
         let item = document.createElement('li');
 
         let buttonGroup = document.createElement('div');
@@ -45,13 +52,31 @@
         let deliteButton = document.createElement('button');
 
         item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-        item.textContent = name;
+        item.textContent = obj.name;
 
         buttonGroup.classList.add('btn-group', 'btn-group-sm');
         doneButton.classList.add('btn', 'btn-success');
         doneButton.textContent = 'DONE';
         deliteButton.classList.add('btn', 'btn-danger');
         deliteButton.textContent = 'DELITE';
+
+        doneButton.addEventListener('click', function () {
+            item.classList.toggle('list-group-item-success')
+            for (let element of todoTasksArray) {
+                if (obj.id == element.id) { obj.done = !obj.done };
+            };
+        });
+
+        deliteButton.addEventListener('click', function () {
+            if (confirm('are you sure?')) {
+                item.remove();
+                for (let element = 0; element < todoTasksArray.length; element++) {
+                    if (todoTasksArray[element].id == obj.id) {
+                        todoTasksArray.splice(element, 1);
+                    };
+                };
+            };
+        });
 
         buttonGroup.append(doneButton);
         buttonGroup.append(deliteButton);
@@ -62,16 +87,7 @@
             doneButton,
             deliteButton,
         }
-    }
-
-    function checkStatus() {
-        let done = false;
-        if (todoItem.doneButton.classList.contains('list-group-item-success')) {
-            done = true;
-        } else { done = false };
-        return done;
-    }
-
+    };
     function createTodoApp(container, title = 'TODO-LIST') {
         // her we assign functions into variables
         let todoAppTitle = createAppTitle(title);
@@ -89,7 +105,7 @@
                 todoItemForm.button.removeAttribute('disabled');
             } else {
                 todoItemForm.button.setAttribute('disabled', '');
-            }
+            };
         });
 
         todoItemForm.form.addEventListener('submit', function (e) {
@@ -97,35 +113,27 @@
             // check if we have value of input field
             if (!todoItemForm.input.value) {
                 return;
-            }
+            };
 
-            let todoItem = createTodoItem(todoItemForm.input.value);
+            todoNewTask = {
+                name: todoItemForm.input.value,
+                done: false,
+                id: gettNewId(todoTasksArray),
+            };
+
+            let todoItem = createTodoItem(todoNewTask);
+            // here we add new TASK into DOM element
             todoList.append(todoItem.item);
-
-            todoItem.doneButton.addEventListener('click', function () {
-                todoItem.item.classList.toggle('list-group-item-success');
-            });
-
-            todoItem.deliteButton.addEventListener('click', function () {
-                if (confirm('are you sure?')) {
-                    todoItem.item.remove();
-                }
-            });
-
-            let todoId = Math.floor(Math.random() * 10) + 1;
-            todoItem.item.setAttribute('id', todoId);
 
             // here we delite input value(new task that user has enter) after adding new task
             todoItemForm.input.value = '';
             // set DISABLED to form btn after adding new task 
             todoItemForm.button.setAttribute('disabled', '');
+            // here we add new TASK into Array of tasks
+            todoTasksArray.push(todoNewTask);
+            console.log(todoTasksArray)
         });
-        todoTasksArray.push({
-            name: todoItem.input.value,
-            done: checkStatus(),
-            id: todoItem.item.getAttribute('id'),
-        });
-    }
+    };
 
     window.createTodoApp = createTodoApp;
 
