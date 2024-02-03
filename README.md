@@ -5,7 +5,8 @@ Bootstrap,
 LocalStorage,    
 JSON.stringify,   
 JSON.parse,    
-GLOBAL OBJECT: window.(our function),   
+GLOBAL OBJECT: window.(our function), 
+e.preventDefault,      
 DOM elements were built with JS.   
 
 

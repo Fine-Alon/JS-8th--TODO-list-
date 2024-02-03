@@ -1,13 +1,14 @@
 (function () {
-    // global objects for using from every contains in thise APP func's
-    // array that include objects(tasks) that contain(NAME, ID, DONE-status) 
+    // array that include objects(tasks) that contain(NAME, ID, DONE-status)
     let todoTasksArray = [],
-        keyName = '';
+        keyName = ''
+
     function createAppTitle(title) {
         let $appTitle = document.createElement('h2');
         $appTitle.innerHTML = title;
         return $appTitle;
-    };
+    }
+
     function createTodoItemForm() {
         let $form = document.createElement('form');
         let $input = document.createElement('input');
@@ -23,7 +24,7 @@
         // set DISABLED to form btn when page has been loaded
         $button.disabled = true;
 
-        // check if FORM input has text and save the btn DISABLED or diferent
+        // check if FORM input has text and save the btn DISABLED or the opposite
         $input.addEventListener('input', function () {
             if ($input.value !== "") {
                 $button.disabled = false;
@@ -42,12 +43,14 @@
             $button,
         }
 
-    };
+    }
+
     function createTodoList() {
         let $list = document.createElement('ul');
         $list.classList.add('list-group');
         return $list;
-    };
+    }
+
     function gettNewId(arr) {
         let maxId = 0;
         for (let todoObj of arr) {
@@ -56,7 +59,8 @@
             }
         }
         return maxId += 1;
-    };
+    }
+
     function createTodoItem(obj) {
         let $item = document.createElement('li');
 
@@ -71,96 +75,100 @@
         $doneButton.classList.add('btn', 'btn-success');
         $doneButton.textContent = 'DONE';
         $deliteButton.classList.add('btn', 'btn-danger');
-        $deliteButton.textContent = 'DELITE';
+        $deliteButton.textContent = 'DELETE';
 
         $buttonGroup.append($doneButton);
         $buttonGroup.append($deliteButton);
         $item.append($buttonGroup);
 
-        if (obj.done == true) { $item.classList.add('list-group-item-success') };
+        if (obj.done) {
+            $item.classList.add('list-group-item-success')
+        }
 
         $doneButton.addEventListener('click', function () {
             $item.classList.toggle('list-group-item-success')
             for (let element of todoTasksArray) {
-                if (obj.id == element.id) { obj.done = !obj.done };
-            };
+                if (obj.id === element.id) {
+                    obj.done = !obj.done
+                }
+                ;
+            }
             saveTodoData(keyName, todoTasksArray);
-        });
+        })
 
         $deliteButton.addEventListener('click', function () {
             if (confirm('are you sure?')) {
-                $item.remove();
+                $item.remove()
                 for (let element = 0; element < todoTasksArray.length; element++) {
-                    if (todoTasksArray[element].id == obj.id) {
-                        todoTasksArray.splice(element, 1);
-                    };
-                };
+                    if (todoTasksArray[element].id === obj.id) {
+                        todoTasksArray.splice(element, 1)
+                    }
+                }
                 saveTodoData(keyName, todoTasksArray);
-            };
-        });
-
+            }
+        })
 
         return {
             $item,
             $doneButton,
             $deliteButton,
         }
-    };
+    }
+
     function saveTodoData(keyName, arr) {
-        localStorage.setItem(keyName, JSON.stringify(arr));
-    };
+        localStorage.setItem(keyName, JSON.stringify(arr))
+    }
+
     function createTodoApp(container, title = 'TODO-LIST', keyWord) {
         // her we assign functions into variables
-        let $todoAppTitle = createAppTitle(title);
-        let $todoItemForm = createTodoItemForm();
-        let $todoList = createTodoList();
+        let $todoAppTitle = createAppTitle(title)
+        let $todoItemForm = createTodoItemForm()
+        let $todoList = createTodoList()
 
-        container.append($todoAppTitle);
-        container.append($todoItemForm.$form);
-        container.append($todoList);
+        container.append($todoAppTitle)
+        container.append($todoItemForm.$form)
+        container.append($todoList)
 
-        keyName = keyWord;
+        keyName = keyWord
 
-        // check if we have any stored string(ARRAY data) & parse it back to readeble ARRAY 
-        let saveData = localStorage.getItem(keyName);
+        // check if we have any stored string(ARRAY data) & parse it back to readable ARRAY
+        let savedData = localStorage.getItem(keyName)
 
-        if (saveData !== null && saveData !== '') {
-            todoTasksArray = JSON.parse(saveData);
-        };
+        if (savedData !== null && savedData !== '') {
+            todoTasksArray = JSON.parse(savedData)
+        }
 
-        // add every object of main ARRAY to 'createTodoItem' func for doing DOM structur & add them to TODO List 
+        // add every object of main ARRAY to 'createTodoItem' func for doing DOM structure & add them to TODO List
         for (let listObj of todoTasksArray) {
-            let $todoItem = createTodoItem(listObj);
-            $todoList.append($todoItem.$item);
-        };
+            let $todoItem = createTodoItem(listObj)
+            $todoList.append($todoItem.$item)
+        }
 
         $todoItemForm.$form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            // check if we have value of input field
-            if (!$todoItemForm.$input.value) {
-                return;
-            };
+            e.preventDefault()
+            // check if we have value in input field
+            if (!$todoItemForm.$input.value) return
 
-            todoNewTask = {
+            const todoNewTaskObj = {
                 name: $todoItemForm.$input.value,
                 done: false,
                 id: gettNewId(todoTasksArray),
-            };
+            }
 
-            let $todoItem = createTodoItem(todoNewTask);
+            let $todoItem = createTodoItem(todoNewTaskObj);
 
             // here we add new TASK into Array of tasks
-            todoTasksArray.push(todoNewTask);
+            todoTasksArray.push(todoNewTaskObj)
 
-            saveTodoData(keyName, todoTasksArray);
             // here we add new TASK into DOM element
-            $todoList.append($todoItem.$item);
+            $todoList.append($todoItem.$item)
 
-            // here we delite input value(new task that user has enter) after adding new task
-            $todoItemForm.$input.value = '';
+            saveTodoData(keyName, todoTasksArray)
+            // here we delete input value(new task that user has enter) after adding new task
+            $todoItemForm.$input.value = ''
 
-        });
-    };
+        })
+    }
 
-    window.createTodoApp = createTodoApp;
-})();
+    window.createTodoApp = createTodoApp
+})()
